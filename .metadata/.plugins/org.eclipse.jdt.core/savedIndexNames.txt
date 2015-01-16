@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+C:\Users\jp\Workspace\Personal\SourceCode\Android\arocandroid\.metadata\.plugins\org.eclipse.jdt.core
+2234336126.index
+3894594555.index
+722609791.index
