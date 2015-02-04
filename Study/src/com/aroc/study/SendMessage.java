@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import com.aroc.system.SMS;
+
 import android.R.string;
 import android.app.Activity;
 import android.content.Context;
@@ -50,18 +52,17 @@ public class SendMessage extends Activity implements OnClickListener {
 
 	/**
 	 * 发送消息
+	 * 
 	 */
 	public void sendMessage() {
 
 		EditText telnumber = (EditText) findViewById(R.id.etTelnumber);
 		EditText message = (EditText) findViewById(R.id.etMessage);
-
-		SmsManager sms = SmsManager.getDefault();
-		ArrayList<String> lstMessage = sms.divideMessage(message.getText()
-				.toString());
-		for (String msg : lstMessage) {
-			sms.sendTextMessage(telnumber.getText().toString(), null, msg,
-					null, null);
+		try {
+			SMS.sendMessage(telnumber.getText().toString(), message.getText()
+					.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -104,7 +105,8 @@ public class SendMessage extends Activity implements OnClickListener {
 		try {
 			// sd卡在mnt/sdcard目录下 也可以直接存sdcard（是对mnt/sdcard的引用）
 			// 需要写权限信息（开发者选项中有选项可以设置读sd卡要权限）
-			String filepath = Environment.getExternalStorageDirectory().getPath();
+			String filepath = Environment.getExternalStorageDirectory()
+					.getPath();
 			if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
 				// 有SD卡
 			}
@@ -112,12 +114,4 @@ public class SendMessage extends Activity implements OnClickListener {
 			e.printStackTrace();
 		}
 	}
-
-	public long getSDCardSize() {
-		StatFs statFs = new StatFs(Environment.getExternalStorageDirectory()
-				.getPath());
-		
-		return statFs.getBlockCountLong() * statFs.getBlockSizeLong();
-	}
-
 }
