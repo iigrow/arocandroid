@@ -1,17 +1,24 @@
 package com.aroc.system;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 import java.util.Map;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
 import android.os.StatFs;
+import android.text.TextUtils;
+import android.util.Xml;
 
 public class Storage {
 	/**
 	 * 获取SD卡总容量
+	 * 
 	 * @return SD Card size
 	 */
 	public static long getSDSize() {
@@ -26,6 +33,7 @@ public class Storage {
 
 	/**
 	 * 获取SD卡可用空间
+	 * 
 	 * @return
 	 */
 	public static long getSDAvaliableSize() {
@@ -40,6 +48,7 @@ public class Storage {
 
 	/**
 	 * 获取SD卡自由空间大小
+	 * 
 	 * @return
 	 */
 	public static long getSDFreeSize() {
@@ -54,6 +63,7 @@ public class Storage {
 
 	/**
 	 * 保存一项
+	 * 
 	 * @param context
 	 * @param key
 	 * @param value
@@ -68,6 +78,7 @@ public class Storage {
 
 	/**
 	 * 保存序列项
+	 * 
 	 * @param context
 	 * @param map
 	 */
