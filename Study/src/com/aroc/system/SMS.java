@@ -58,6 +58,7 @@ public class SMS {
 			info.setBody(cursor.getString(3));
 			lstResult.add(info);
 		}
+		cursor.close();
 		return lstResult;
 	}
 }
