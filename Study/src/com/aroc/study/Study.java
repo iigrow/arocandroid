@@ -3,13 +3,18 @@ package com.aroc.study;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.aroc.system.SMS;
+import com.aroc.system.SMSInfo;
 
 import android.R.string;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Path;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +27,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SendMessage extends Activity implements OnClickListener {
+public class Study extends Activity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public class SendMessage extends Activity implements OnClickListener {
 		EditText txtTelNumber = (EditText) this.findViewById(R.id.etTelnumber);
 		String telNumber = txtTelNumber.getText().toString();
 		if (TextUtils.isEmpty(telNumber)) {
-			Toast.makeText(SendMessage.this, "Not empaty telnumber",
+			Toast.makeText(Study.this, "Not empaty telnumber",
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -113,5 +118,20 @@ public class SendMessage extends Activity implements OnClickListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void useContentProvider() {
+		ContentResolver cResolver = getContentResolver();
+		Uri uri = Uri.parse("content://com.aroc.datasource/insert");
+		ContentValues values=new ContentValues();
+		values.put("test", "testValue");
+		cResolver.insert(uri, values);
+	}
+
+	/**
+	 * ±¸·Ý¶ÌÐÅ
+	 */
+	public void BackupSMS() {
+		List<SMSInfo> lstSMS = SMS.getMessage(getContentResolver());
 	}
 }
