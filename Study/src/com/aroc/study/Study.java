@@ -8,6 +8,8 @@ import java.util.List;
 import com.aroc.system.SMS;
 import com.aroc.system.SMSInfo;
 
+import android.R.anim;
+import android.R.integer;
 import android.R.string;
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -19,6 +21,8 @@ import android.graphics.Path;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StatFs;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
@@ -28,6 +32,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Study extends Activity implements OnClickListener {
+
+	private static final int SHOW_MSGBOX = 1;
+	/*
+	 * 子线程利用handler发送一条消息，消息被放在主线程的消息队列里面
+	 * 主线程里面有一个looper消息的轮询器
+	 * 如果轮询器发现了新的消息，调用handlemessage的方法，处理消息
+	 * 
+	 * */
+	private Handler _handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			if (msg.what == SHOW_MSGBOX) {
+				Toast.makeText(Study.this, msg.obj.toString(), 0).show();
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +142,7 @@ public class Study extends Activity implements OnClickListener {
 	public void useContentProvider() {
 		ContentResolver cResolver = getContentResolver();
 		Uri uri = Uri.parse("content://com.aroc.datasource/insert");
-		ContentValues values=new ContentValues();
+		ContentValues values = new ContentValues();
 		values.put("test", "testValue");
 		cResolver.insert(uri, values);
 	}
@@ -133,5 +152,27 @@ public class Study extends Activity implements OnClickListener {
 	 */
 	public void BackupSMS() {
 		List<SMSInfo> lstSMS = SMS.getMessage(getContentResolver());
+	}
+
+	public void ListenSMS() {
+		ContentResolver resolver = getContentResolver();
+		// resolver.notify();//发出消息
+		// resolver.notifyChange(uri, observer)
+		Uri uri = Uri.parse("content://sms");
+		resolver.registerContentObserver(uri, true, new SMSContentObserver(
+				new Handler()));
+	}
+
+	public void AsyncShowToast() {
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Message msg = new Message();
+				msg.what = SHOW_MSGBOX;
+				msg.obj = "test";
+				_handler.sendMessage(msg);
+			}
+		};
+		thread.start();
 	}
 }
